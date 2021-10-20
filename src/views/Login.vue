@@ -55,7 +55,9 @@ export default {
           const user = result.user;
           console.log("user", user);
           this.$store.dispatch("setUser", user);
-          this.$router.push({ name: "Profile" });
+          this.$router.push({
+            name: "Profile",
+          });
           // ...
         })
         .catch((error) => {

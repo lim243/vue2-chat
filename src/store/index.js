@@ -27,6 +27,9 @@ export default new Vuex.Store({
         state.commit("SET_LOGGED_IN", user !== null);
       }
     },
+    signOut(state) {
+      state.commit("SET_USER", null);
+    },
   },
   modules: {},
   getters: {
