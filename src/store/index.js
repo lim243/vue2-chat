@@ -18,6 +18,9 @@ export default new Vuex.Store({
     SET_USER(state, payload) {
       state.user = payload;
     },
+    SEND_MESSAGE(state, payload) {
+      state.messages.push(payload);
+    },
   },
   actions: {
     // Asyncronous, for API
@@ -29,6 +32,9 @@ export default new Vuex.Store({
     },
     signOut(state) {
       state.commit("SET_USER", null);
+    },
+    sendMessage(state, payload) {
+      state.commit("SEND_MESSAGE", payload);
     },
   },
   modules: {},
