@@ -18,7 +18,23 @@
                     placeholder="Please select an option"
                   />
                 </div>
-                <p>{{ this.searchOptions }}</p>
+                <button class="btn btn-light" @click="showAddRoom">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-plus"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+                    />
+                  </svg>
+                </button>
+                <span v-show="this.showPopup">
+                  <Popup :toggleShow="showAddRoom" />
+                </span>
               </div>
             </div>
 
@@ -191,6 +207,7 @@ import { mapState } from "vuex";
 import algoliasearch from "algoliasearch";
 import Dropdown from "vue-simple-search-dropdown";
 import CreateMessage from "@/components/CreateMessage.vue";
+import Popup from "@/components/Popup.vue";
 
 const ALGOLIA_APP_ID = process.env.VUE_APP_ALGOLIA_APP_ID;
 const ALGOLIA_ADMIN_KEY = process.env.VUE_APP_ALGOLIA_ADMIN_KEY;
@@ -200,6 +217,7 @@ export default {
   components: {
     Dropdown,
     CreateMessage,
+    Popup,
   },
   data() {
     return {
@@ -207,10 +225,11 @@ export default {
       client: null,
       index: null,
       searchOptions: [],
+      showRoom: false,
     };
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "showPopup"]),
   },
   created() {
     this.client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
@@ -218,6 +237,9 @@ export default {
   },
 
   methods: {
+    showAddRoom() {
+      this.$store.dispatch("toggleShowPopup");
+    },
     mapOptions(options) {
       // { id: 1, name: 'Option 1'}
       const arr = options.map((entry, index) => ({
@@ -233,7 +255,6 @@ export default {
       return arr;
     },
     onSearchChange(val) {
-      console.log(this.username, ALGOLIA_APP_ID, val);
       this.index
         .search(val)
         .then(({ hits }) => {

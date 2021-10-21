@@ -9,6 +9,7 @@ export default new Vuex.Store({
     rooms: [],
     currentRoom: {},
     messages: [],
+    showPopup: false,
   },
   mutations: {
     // Synchonous way to update store
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     SEND_MESSAGE(state, payload) {
       state.messages.push(payload);
+    },
+    TOGGLE_SHOW_POPUP(state) {
+      state.showPopup = !state.showPopup;
     },
   },
   actions: {
@@ -36,9 +40,13 @@ export default new Vuex.Store({
     sendMessage(state, payload) {
       state.commit("SEND_MESSAGE", payload);
     },
+    toggleShowPopup(state) {
+      state.commit("TOGGLE_SHOW_POPUP");
+    },
   },
   modules: {},
   getters: {
     getUser: (state) => state.user,
+    getShowPopup: (state) => state.showPopup,
   },
 });
