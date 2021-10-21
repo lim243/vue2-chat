@@ -8,7 +8,7 @@
           class="form-control"
           placeholder="Type your message"
         />
-        <button class="btn btn-primary" type="submit" @click="onSendMessage">Send</button>
+        <button class="btn btn-primary" type="submit">Send</button>
       </div>
     </form>
   </div>
@@ -16,6 +16,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import { db } from "@/firebase/db";
 
 export default {
   data() {
@@ -27,24 +29,27 @@ export default {
     onSendMessage() {
       if (this.message) {
         // Send message to store and update db
-        // TODO: Send to DB
-        // const messageRef = collection(db, "message");
-        // const chatMessagesRef = collection(messageRef, this.currentRoom.id, "messages");
-        // setDoc(doc(chatMessagesRef), docData);
-
-        const payload = {
+        const newMsg = {
           sentBy: this.user.uid,
           sentAt: Date.now(),
           messageText: this.message,
         };
-        this.$store.dispatch("sendMessage", payload);
-        console.log("sendMessage", this.message);
+
+        // Write to DB: messages/{roomId}/messages/{msgId}
+        addDoc(collection(db, "messages", this.currentRoom.id, "messages"), newMsg);
+
+        updateDoc(doc(db, "rooms", this.currentRoom.id), {
+          recentMessage: newMsg,
+        });
+
+        this.$store.dispatch("sendMessage", newMsg);
+        console.log("sendMessage", newMsg);
       }
       this.message = null;
     },
   },
   computed: {
-    ...mapState(["user"]),
+    ...mapState(["user", "currentRoom"]),
   },
 };
 </script>

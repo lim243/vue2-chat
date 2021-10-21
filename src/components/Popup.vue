@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { doc, setDoc, collection } from "firebase/firestore";
+import { doc, collection, setDoc } from "firebase/firestore";
 import { db } from "@/firebase/db";
 import { mapState } from "vuex";
 
@@ -71,7 +71,13 @@ export default {
           recentMessage: null,
         };
 
+        // Add new room to rooms collection
         await setDoc(newRoomRef, roomData);
+
+        // Add empty messages collection
+        const newMsgRef = doc(db, "messages", newRoomRef.id);
+        await setDoc(newMsgRef, { roomId: newRoomRef.id });
+
         // Dispatch to store and update current room
         this.$store.dispatch("addRoom", roomData);
         this.$store.dispatch("setCurrentRoom", roomData.id);
