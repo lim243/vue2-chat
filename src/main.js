@@ -7,11 +7,6 @@ import store from "./store";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "./firebase/firebaseConfig";
-
-initializeApp(firebaseConfig);
-
 Vue.config.productionTip = false;
 Vue.use(VueChatScroll);
 
