@@ -3,22 +3,30 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-              default header
-            </slot>
-          </div>
+          <!-- <div class="modal-header"> -->
+          <slot name="modal-title">
+            Add New Public Room
+          </slot>
+          <!-- </div> -->
 
           <div class="modal-body">
             <slot name="body">
-              default body
+              <input
+                type="text"
+                class="form-control"
+                v-model="roomName"
+                id="addRoomField"
+                placeholder="New Room Name"
+              />
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              default footer
-              <button class="modal-default-button" @click="toggleShowPopup">
+              <button class="btn btn-secondary" @click="toggleShowPopup">
+                Cancel
+              </button>
+              <button class="btn btn-primary" @click="createRoom">
                 OK
               </button>
             </slot>
@@ -30,10 +38,46 @@
 </template>
 
 <script>
+import { doc, setDoc, collection } from "firebase/firestore";
+import { db } from "@/firebase/db";
+import { mapState } from "vuex";
+
 export default {
+  data() {
+    return {
+      roomName: null,
+    };
+  },
+  computed: {
+    ...mapState(["user", "showPopup", "rooms", "currentRoom"]),
+  },
+
   methods: {
     toggleShowPopup() {
       this.$store.dispatch("toggleShowPopup");
+      this.roomName = null;
+    },
+    async createRoom() {
+      if (this.roomName) {
+        const newRoomRef = await doc(collection(db, "rooms"));
+
+        const roomData = {
+          id: newRoomRef.id,
+          name: this.roomName,
+          createdAt: Date.now(),
+          createdBy: this.user.uid,
+          members: [this.user.uid],
+          type: 1,
+          recentMessage: null,
+        };
+
+        await setDoc(newRoomRef, roomData);
+        // Dispatch to store and update current room
+        this.$store.dispatch("addRoom", roomData);
+        this.$store.dispatch("setCurrentRoom", roomData.id);
+
+        this.toggleShowPopup();
+      }
     },
   },
 };
@@ -71,10 +115,16 @@ export default {
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
+  border-bottom: none;
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 0;
+  border-bottom: none;
+}
+
+.modal-footer {
+  border-top: 0;
 }
 
 .modal-default-button {
