@@ -10,15 +10,15 @@
               <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                   <Dropdown
-                    :options="searchOptions"
+                    :options="this.searchOptions"
                     v-on:filter="onSearchChange"
                     v-on:selected="validateSelection"
                     :disabled="false"
                     :maxItem="10"
                     placeholder="Please select an option"
-                  >
-                  </Dropdown>
+                  />
                 </div>
+                <p>{{ this.searchOptions }}</p>
               </div>
             </div>
 
@@ -218,6 +218,20 @@ export default {
   },
 
   methods: {
+    mapOptions(options) {
+      // { id: 1, name: 'Option 1'}
+      const arr = options.map((entry, index) => ({
+        displayName: entry.displayName,
+        email: entry.email,
+        uid: entry.objectID,
+        phoneNumber: entry.phoneNumber,
+        photoURL: entry.photoURL,
+        id: index,
+        name: entry.displayName,
+      }));
+
+      return arr;
+    },
     onSearchChange(val) {
       console.log(this.username, ALGOLIA_APP_ID, val);
       this.index
@@ -225,7 +239,7 @@ export default {
         .then(({ hits }) => {
           if (hits.length > 0) {
             console.log(hits);
-            this.searchOptions = hits;
+            this.searchOptions = this.mapOptions(hits);
             console.log("this.searchOptions", this.searchOptions);
           }
         })
