@@ -30,19 +30,25 @@ export default {
       if (this.message) {
         // Send message to store and update db
         const newMsg = {
-          sentBy: this.user.uid,
+          sentBy: {
+            id: this.user.uid,
+            displayName: this.user.displayName,
+            photoURL: this.user.photoURL,
+          },
+
           sentAt: Date.now(),
           messageText: this.message,
+          roomId: this.currentRoom.id,
         };
 
         // Write to DB: messages/{roomId}/messages/{msgId}
-        addDoc(collection(db, "messages", this.currentRoom.id, "messages"), newMsg);
+        addDoc(collection(db, "messages", this.currentRoom.id, "msgs"), newMsg);
 
         updateDoc(doc(db, "rooms", this.currentRoom.id), {
           recentMessage: newMsg,
         });
 
-        this.$store.dispatch("sendMessage", newMsg);
+        // this.$store.dispatch("sendMessage", newMsg);
         console.log("sendMessage", newMsg);
       }
       this.message = null;

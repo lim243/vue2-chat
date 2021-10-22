@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     mapRooms() {
-      var rooms = [];
       this.$store.dispatch("resetRooms");
 
       // Subscribe to rooms collection in db
@@ -64,7 +63,6 @@ export default {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
             let room = change.doc.data();
-            rooms.push(room);
 
             // Dispatch to vuex store
             this.$store.dispatch("addRoom", room);

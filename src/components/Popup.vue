@@ -79,7 +79,7 @@ export default {
         await setDoc(newMsgRef, { roomId: newRoomRef.id });
 
         // Dispatch to store and update current room
-        this.$store.dispatch("addRoom", roomData);
+        // this.$store.dispatch("addRoom", roomData);
         this.$store.dispatch("setCurrentRoom", roomData.id);
 
         this.toggleShowPopup();

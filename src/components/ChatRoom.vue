@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 col-lg-7 col-xl-9">
+  <div>
     <div class="py-2 px-4 border-bottom d-none d-lg-block">
       <div class="d-flex align-items-center py-1">
         <div class="flex-grow-1 pl-3">
@@ -64,46 +64,51 @@
       </div>
     </div>
 
-    <div class="position-relative">
-      <div class="chat-messages p-4 overflow-auto">
-        <div class="chat-message-right pb-4">
+    <div v-chat-scroll="{ always: true, smooth: true }">
+      <div
+        v-for="message in this.messages"
+        :key="message.id"
+        class="chat-messages p-4 overflow-auto"
+      >
+        <div v-if="message.sentBy.id === user.uid" class="chat-message-right pb-4">
           <div>
             <img
-              src="https://bootdey.com/img/Content/avatar/avatar1.png"
+              :src="message.sentBy.photoURL"
               class="rounded-circle mr-1"
-              alt="Chris Wood"
+              :alt="message.sentBy.displayName"
               width="40"
               height="40"
             />
-            <div class="text-muted small text-nowrap mt-2">2:33 am</div>
           </div>
-          <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-            <div class="font-weight-bold mb-1">You</div>
-            Lorem ipsum dolor sit amet, vis erat denique in, dicunt prodesset te vix.
+          <div class="flex-shrink-1 bg-primary rounded py-2 px-3 mr-3 text-white">
+            <div class="font-weight-bold mb-1">{{ message.sentBy.displayName }}</div>
+            <div class="text-black-50 small text-nowrap mt-2">
+              {{ message.sentAt | moment }}
+            </div>
+            {{ message.messageText }}
           </div>
         </div>
 
-        <div class="chat-message-left pb-4">
+        <div v-else class="chat-message-left pb-4">
           <div>
             <img
-              src="https://bootdey.com/img/Content/avatar/avatar3.png"
+              :src="message.sentBy.photoURL"
               class="rounded-circle mr-1"
-              alt="Sharon Lessman"
+              :alt="message.sentBy.displayName"
               width="40"
               height="40"
             />
-            <div class="text-muted small text-nowrap mt-2">2:44 am</div>
           </div>
-          <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
-            <div class="font-weight-bold mb-1">Sharon Lessman</div>
-            Sit meis deleniti eu, pri vidit meliore docendi ut, an eum erat animal
-            commodo.
+          <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+            <div class="font-weight-bold mb-1">{{ message.sentBy.displayName }}</div>
+            <div class="text-black-50 small text-nowrap mt-2">
+              {{ message.sentAt | moment }}
+            </div>
+            {{ message.messageText }}
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Create Message Form -->
     <CreateMessage />
   </div>
 </template>
@@ -111,14 +116,62 @@
 <script>
 import CreateMessage from "@/components/CreateMessage.vue";
 import { mapState } from "vuex";
+import moment from "moment";
+import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "@/firebase/db";
 
 export default {
+  data() {
+    return {
+      unsub: () => {},
+      localUsers: {},
+    };
+  },
+  filters: {
+    moment: function(date) {
+      return moment(date).format("M/D, h:mm a");
+    },
+  },
+  created() {
+    this.mapMessages();
+  },
   components: {
     CreateMessage,
   },
-
   computed: {
-    ...mapState(["users", "rooms", "currentRoom"]),
+    ...mapState(["user", "rooms", "currentRoom", "messages"]),
+  },
+  beforeDestroy() {
+    this.unsub();
+    this.$store.dispatch("resetMessages");
+  },
+  methods: {
+    async mapMessages() {
+      // Subscribe to rooms collection in db
+      const q = query(
+        collectionGroup(db, "msgs"),
+        where("roomId", "==", this.currentRoom.id)
+      );
+
+      this.unsub = onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            let doc = change.doc;
+            let message = {
+              id: doc.id,
+              messageText: doc.data().messageText,
+              roomId: doc.data().roomId,
+              sentAt: doc.data().sentAt,
+              sentBy: doc.data().sentBy,
+            };
+
+            // Dispatch to vuex store
+            this.$store.dispatch("addMessage", message);
+          }
+        });
+      });
+      console.log("messages", this.messages);
+    },
   },
 };
 </script>

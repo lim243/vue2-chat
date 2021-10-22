@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     rooms: [],
-    currentRoom: {},
+    currentRoom: null,
     messages: [],
     showPopup: false,
   },
@@ -15,9 +15,16 @@ export default new Vuex.Store({
     // Synchonous way to update store
     RESET_ROOMS(state) {
       state.rooms = [];
+      state.messages = [];
+    },
+    RESET_MESSAGES(state) {
+      state.messages = [];
     },
     ADD_ROOM(state, value) {
       state.rooms.push(value);
+    },
+    ADD_MESSAGE(state, value) {
+      state.messages.push(value);
     },
     SET_LOGGED_IN(state, value) {
       state.user.loggedIn = value;
@@ -36,6 +43,9 @@ export default new Vuex.Store({
     TOGGLE_SHOW_POPUP(state) {
       state.showPopup = !state.showPopup;
     },
+    UPDATE_CHAT_USER_PROFILE(state) {
+      state.messages;
+    },
   },
   actions: {
     // Asyncronous, for API
@@ -51,8 +61,14 @@ export default new Vuex.Store({
     addRoom(state, payload) {
       state.commit("ADD_ROOM", payload);
     },
+    addMessage(state, payload) {
+      state.commit("ADD_MESSAGE", payload);
+    },
     resetRooms(state) {
       state.commit("RESET_ROOMS");
+    },
+    resetMessages(state) {
+      state.commit("RESET_MESSAGES");
     },
     fetchRooms(state) {
       // Get all corresponding rooms
@@ -70,11 +86,15 @@ export default new Vuex.Store({
     toggleShowPopup(state) {
       state.commit("TOGGLE_SHOW_POPUP");
     },
+    updateChatUserProfile(state, payload) {
+      state.commit("UPDATE_CHAT_USER_PROFILE", payload);
+    },
   },
   modules: {},
   getters: {
     getUser: (state) => state.user,
     getRooms: (state) => state.rooms,
+    getMessages: (state) => state.messages,
     getCurrentRoom: (state) => state.currentRoom,
     getShowPopup: (state) => state.showPopup,
   },
