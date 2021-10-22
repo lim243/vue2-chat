@@ -120,7 +120,7 @@
 import CreateMessage from "@/components/CreateMessage.vue";
 import { mapState } from "vuex";
 import moment from "moment";
-import { collectionGroup, query, where, onSnapshot } from "firebase/firestore";
+import { collectionGroup, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { db } from "@/firebase/db";
 
 export default {
@@ -135,8 +135,19 @@ export default {
       return moment(date).format("M/D, h:mm a");
     },
   },
+  watch: {
+    currentRoom: function(newRoom, oldRoom) {
+      console.log("newRoom, oldRoom", newRoom, oldRoom);
+      this.$store.dispatch("resetMessages");
+      this.unsub();
+
+      this.mapMessages(newRoom.id);
+      // console.log("newQuestion", newQuestion);
+      // console.log("oldQuestion", oldQuestion);
+    },
+  },
   created() {
-    this.mapMessages();
+    this.mapMessages(this.currentRoom.id);
   },
   components: {
     CreateMessage,
@@ -149,13 +160,15 @@ export default {
     this.$store.dispatch("resetMessages");
   },
   methods: {
-    async mapMessages() {
+    async mapMessages(roomId) {
+      console.log("roomId", roomId);
       // Subscribe to rooms collection in db
       const q = query(
         collectionGroup(db, "msgs"),
-        where("roomId", "==", this.currentRoom.id)
+        where("roomId", "==", roomId),
+        orderBy("sentAt")
       );
-
+      console.log("q", q);
       this.unsub = onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {

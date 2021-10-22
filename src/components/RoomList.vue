@@ -66,6 +66,7 @@ export default {
 
             // Dispatch to vuex store
             this.$store.dispatch("addRoom", room);
+            this.changeRoom(room.id);
           }
         });
       });
