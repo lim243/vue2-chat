@@ -2,13 +2,13 @@
   <div class="content">
     <div class="container">
       <div class="card">
-        <div class="row">
+        <div id="chat-main-container" class="row">
           <!-- Sidebar -->
           <Sidebar />
 
           <!-- Main message area -->
-          <div class="col-12 col-lg-7 col-xl-9">
-            <div v-if="this.currentRoom">
+          <div class="col-12 col-lg-7 col-xl-9" style="max-height: 90vh; overflow:hidden">
+            <div style="height: 100%" v-if="this.currentRoom">
               <ChatRoom />
             </div>
             <div v-else>
@@ -52,12 +52,17 @@ export default {
 
 <style>
 .content {
-  height: 100%;
-  width: 100%;
+  /* height: 100%;
+  width: 100%; */
+  flex: 1 1 auto;
 }
 
 body {
   margin-top: 20px;
+}
+
+#chat-main-container {
+  height: 90vh;
 }
 </style>
 

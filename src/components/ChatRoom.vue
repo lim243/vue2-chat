@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="py-2 px-4 border-bottom d-none d-lg-block">
+  <div class="chat-room">
+    <div class="py-2 px-4 border-bottom d-none d-lg-block room-header">
       <div class="d-flex align-items-center py-1">
         <div class="flex-grow-1 pl-3">
           <h2>{{ this.currentRoom.name }}</h2>
@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <div v-chat-scroll="{ always: true, smooth: true }">
+    <div class="room-content" v-chat-scroll="{ always: false, smooth: true }">
       <div
         v-for="message in this.messages"
         :key="message.id"
@@ -109,7 +109,10 @@
         </div>
       </div>
     </div>
-    <CreateMessage />
+
+    <div class="room-footer">
+      <CreateMessage />
+    </div>
   </div>
 </template>
 
@@ -177,6 +180,11 @@ export default {
 </script>
 
 <style>
+.chat-room {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .chat-online {
   color: #34ce57;
 }
@@ -219,5 +227,16 @@ export default {
 }
 .border-top {
   border-top: 1px solid #dee2e6 !important;
+}
+
+.room-header {
+  flex: 0 1 auto;
+}
+.room-content {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+.room-footer {
+  flex: 0 1 40px;
 }
 </style>
