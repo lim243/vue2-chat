@@ -2,12 +2,10 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
-          <!-- <div class="modal-header"> -->
+        <div v-if="type === 'add'" class="modal-container">
           <slot name="modal-title">
             Add New Public Room
           </slot>
-          <!-- </div> -->
 
           <div class="modal-body">
             <slot name="body">
@@ -26,8 +24,25 @@
               <button class="btn btn-secondary" @click="toggleShowPopup">
                 Cancel
               </button>
-              <button class="btn btn-primary" @click="createRoom">
+              <button class="btn btn-primary" @click="okButtonClicked">
                 OK
+              </button>
+            </slot>
+          </div>
+        </div>
+
+        <div v-if="type === 'delete'" class="modal-container">
+          <slot name="modal-title">
+            Are you sure you want to delete this room?
+          </slot>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              <button class="btn btn-secondary" @click="toggleShowPopup">
+                Cancel
+              </button>
+              <button class="btn btn-danger" @click="okButtonClicked">
+                Delete
               </button>
             </slot>
           </div>
@@ -38,7 +53,7 @@
 </template>
 
 <script>
-import { doc, collection, setDoc } from "firebase/firestore";
+import { doc, collection, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebase/db";
 import { mapState } from "vuex";
 
@@ -48,14 +63,44 @@ export default {
       roomName: null,
     };
   },
+  name: "Popup",
+  template: "Popup",
+  props: {
+    type: {
+      type: String,
+      required: true,
+      default: "add",
+    },
+  },
   computed: {
-    ...mapState(["user", "showPopup", "rooms", "currentRoom"]),
+    ...mapState(["user", "showAddPopup", "showDeletePopup", "rooms", "currentRoom"]),
   },
 
   methods: {
     toggleShowPopup() {
-      this.$store.dispatch("toggleShowPopup");
+      console.log("this.type", this.type);
+      this.$store.dispatch("toggleShowPopup", this.type);
       this.roomName = null;
+    },
+    okButtonClicked() {
+      if (this.type === "add") {
+        this.createRoom();
+      } else if (this.type === "delete") {
+        this.deleteRoom();
+      }
+    },
+
+    async deleteRoom() {
+      console.log("delete this current room!");
+      try {
+        await deleteDoc(doc(db, "rooms", this.currentRoom.id));
+        await deleteDoc(doc(db, "messages", this.currentRoom.id));
+
+        this.$store.dispatch("resetMessages");
+        this.$store.dispatch("getNextRoom", this.currentRoom.id);
+      } catch (error) {
+        alert(error);
+      }
     },
     async createRoom() {
       if (this.roomName) {

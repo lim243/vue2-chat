@@ -30,8 +30,8 @@
             />
           </svg>
         </button>
-        <span v-show="this.showPopup">
-          <Popup :toggleShow="showAddRoom" />
+        <span v-show="this.showAddPopup">
+          <Popup type="add" :toggleShow="showAddRoom" />
         </span>
       </div>
     </div>
@@ -67,7 +67,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["user", "showPopup", "rooms"]),
+    ...mapState(["user", "showAddPopup", "rooms"]),
   },
   created() {
     this.client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_ADMIN_KEY);
@@ -124,7 +124,7 @@ export default {
       console.log("val", val);
     },
     showAddRoom() {
-      this.$store.dispatch("toggleShowPopup");
+      this.$store.dispatch("toggleShowPopup", "add");
     },
   },
 };

@@ -9,7 +9,8 @@ export default new Vuex.Store({
     rooms: [],
     currentRoom: null,
     messages: [],
-    showPopup: false,
+    showAddPopup: false,
+    showDeletePopup: false,
   },
   mutations: {
     // Synchonous way to update store
@@ -22,6 +23,12 @@ export default new Vuex.Store({
     },
     ADD_ROOM(state, value) {
       state.rooms.push(value);
+    },
+    DELETE_ROOM(state, value) {
+      // state.rooms.
+      //find room by id and pop it
+      const index = state.rooms.findIndex((ele) => ele.id === value.id);
+      state.rooms.splice(index, 1);
     },
     ADD_MESSAGE(state, value) {
       state.messages.push(value);
@@ -40,11 +47,23 @@ export default new Vuex.Store({
       const foundRoom = state.rooms.find((room) => room.id === roomId);
       state.currentRoom = foundRoom;
     },
-    TOGGLE_SHOW_POPUP(state) {
-      state.showPopup = !state.showPopup;
+    TOGGLE_SHOW_POPUP(state, type) {
+      if (type === "add") {
+        state.showAddPopup = !state.showAddPopup;
+      } else if (type === "delete") {
+        state.showDeletePopup = !state.showDeletePopup;
+      }
     },
     UPDATE_CHAT_USER_PROFILE(state) {
       state.messages;
+    },
+    GO_NEXT_ROOM(state, prev) {
+      console.log("prev", prev);
+      if (state.rooms.length > 0) {
+        state.currentRoom = state.rooms[0];
+      } else {
+        state.currentRoom = null;
+      }
     },
   },
   actions: {
@@ -60,6 +79,9 @@ export default new Vuex.Store({
     },
     addRoom(state, payload) {
       state.commit("ADD_ROOM", payload);
+    },
+    deleteRoom(state, payload) {
+      state.commit("DELETE_ROOM", payload);
     },
     addMessage(state, payload) {
       state.commit("ADD_MESSAGE", payload);
@@ -77,14 +99,17 @@ export default new Vuex.Store({
 
       // Listen to live updates from database
     },
+    getNextRoom(state, prev) {
+      state.commit("GO_NEXT_ROOM", prev);
+    },
     setCurrentRoom(state, roomId) {
       state.commit("SET_CURRENT_ROOM", roomId);
     },
     sendMessage(state, payload) {
       state.commit("SEND_MESSAGE", payload);
     },
-    toggleShowPopup(state) {
-      state.commit("TOGGLE_SHOW_POPUP");
+    toggleShowPopup(state, type) {
+      state.commit("TOGGLE_SHOW_POPUP", type);
     },
     updateChatUserProfile(state, payload) {
       state.commit("UPDATE_CHAT_USER_PROFILE", payload);
@@ -96,6 +121,7 @@ export default new Vuex.Store({
     getRooms: (state) => state.rooms,
     getMessages: (state) => state.messages,
     getCurrentRoom: (state) => state.currentRoom,
-    getShowPopup: (state) => state.showPopup,
+    getShowAddPopup: (state) => state.showAddPopup,
+    getShowDeletePopup: (state) => state.showDeletePopup,
   },
 });
