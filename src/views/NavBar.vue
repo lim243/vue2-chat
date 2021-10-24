@@ -19,6 +19,11 @@
           <li class="nav-item">
             <router-link v-show="!this.user" class="nav-link" to="/">Login</router-link>
           </li>
+          <li class="nav-item">
+            <router-link v-show="!this.user" class="nav-link" to="/register"
+              >Register</router-link
+            >
+          </li>
           <li v-show="this.user" class="nav-item">
             <router-link class="nav-link" to="/chat">Chat</router-link>
           </li>
@@ -27,7 +32,7 @@
           </li>
 
           <li v-show="this.user" class="nav-item">
-            <a @click="signoutButtonPressed">Logout</a>
+            <a class="nav-link" @click="signoutButtonPressed">Logout</a>
           </li>
         </ul>
       </div>
