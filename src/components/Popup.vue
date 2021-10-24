@@ -98,6 +98,7 @@ export default {
 
         this.$store.dispatch("resetMessages");
         this.$store.dispatch("getNextRoom", this.currentRoom.id);
+        this.toggleShowPopup();
       } catch (error) {
         alert(error);
       }
