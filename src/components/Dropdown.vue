@@ -21,15 +21,6 @@
         v-for="(option, index) in filteredOptions"
         :key="index"
       >
-        <div>
-          <img
-            :src="option.photoURL"
-            class="rounded-circle mr-1"
-            alt="William Harris"
-            width="40"
-            height="40"
-          />
-        </div>
         <div class="text-start ms-4">
           <div>{{ option.name }}</div>
           <div>{{ option.email }}</div>

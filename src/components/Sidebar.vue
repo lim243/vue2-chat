@@ -6,7 +6,7 @@
         <div class="flex-grow-1">
           <Dropdown
             name="users"
-            :options="this.searchOptions"
+            :options="this.rooms"
             v-on:filter="onSearchChange"
             v-on:selected="validateSelection"
             :disabled="false"
@@ -76,32 +76,32 @@ export default {
 
   methods: {
     mapOptions(options) {
-      // const arr = options.map((entry, index) => ({
-      //   displayName: entry.displayName,
-      //   email: entry.email,
-      //   uid: entry.objectID,
-      //   phoneNumber: entry.phoneNumber,
-      //   photoURL: entry.photoURL,
-      //   id: index,
-      //   name: entry.displayName,
-      // }));
+      const arr = options.map((entry, index) => ({
+        displayName: entry.displayName,
+        email: entry.email,
+        uid: entry.objectID,
+        phoneNumber: entry.phoneNumber,
+        photoURL: entry.photoURL,
+        id: index,
+        name: entry.displayName,
+      }));
 
       // Debug purposes only
-      const arr = [
-        {
-          id: 0,
-          name: "Andrew T. Lim",
-          email: "andrewlamo1997@gmail.com",
-          objectID: "7zN4ojm8hRRVtMp4muVVkEYE45v1",
-          phoneNumber: null,
-          photoURL:
-            "https://lh3.googleusercontent.com/a-/AOh14Gi3p3A1VULzI1AwMhbuSki1asF3FkPOmm2vO31OuFk=s96-c",
-          providerId: "google.com",
-          uid: "104981178449533454466",
-        },
-      ];
+      // const arr = [
+      //   {
+      //     id: 0,
+      //     name: "Andrew T. Lim",
+      //     email: "andrewlamo1997@gmail.com",
+      //     objectID: "7zN4ojm8hRRVtMp4muVVkEYE45v1",
+      //     phoneNumber: null,
+      //     photoURL:
+      //       "https://lh3.googleusercontent.com/a-/AOh14Gi3p3A1VULzI1AwMhbuSki1asF3FkPOmm2vO31OuFk=s96-c",
+      //     providerId: "google.com",
+      //     uid: "104981178449533454466",
+      //   },
+      // ];
 
-      console.log("options", options, arr);
+      // console.log("options", options, arr);
 
       return arr;
     },
@@ -122,6 +122,7 @@ export default {
     },
     validateSelection(val) {
       console.log("val", val);
+      this.$store.dispatch("setCurrentRoom", val.id);
     },
     showAddRoom() {
       this.$store.dispatch("toggleShowPopup", "add");

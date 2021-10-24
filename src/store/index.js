@@ -65,6 +65,13 @@ export default new Vuex.Store({
         state.currentRoom = null;
       }
     },
+    UPDATE_RECENT_MESSAGE(state, room) {
+      // find room by id, then change the room in array
+      const foundIndex = state.rooms.findIndex((ele) => ele.id == room.id);
+      if (foundIndex !== -1) {
+        Vue.set(state.rooms[foundIndex], "recentMessage", room.recentMessage);
+      }
+    },
   },
   actions: {
     // Asyncronous, for API
@@ -113,6 +120,9 @@ export default new Vuex.Store({
     },
     updateChatUserProfile(state, payload) {
       state.commit("UPDATE_CHAT_USER_PROFILE", payload);
+    },
+    updateRecentMessage(state, payload) {
+      state.commit("UPDATE_RECENT_MESSAGE", payload);
     },
   },
   modules: {},

@@ -5,43 +5,42 @@
         class="list-group-item list-group-item-action border-bottom"
         v-on:click="changeRoom(room.id)"
       >
-        <div class="d-flex align-items-start">
-          <div class="flex-grow-1 ml-3 text-start">
-            {{ room.name }}
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-start">
+            <div class="room-title text-start">
+              {{ room.name }}
+            </div>
+            <div v-if="room.recentMessage" class="text-muted">
+              <div>
+                <span>{{ room.recentMessage.sentAt | moment }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-start text-muted text-truncate" v-if="room.recentMessage">
+            {{ room.recentMessage.messageText }}
           </div>
         </div>
       </button>
     </div>
   </div>
-  <!-- Example -->
-  <!-- <a href="#" class="list-group-item list-group-item-action border-0">
-      <div class="badge bg-success float-right">2</div>
-      <div class="d-flex align-items-start">
-        <img
-          src="https://bootdey.com/img/Content/avatar/avatar2.png"
-          class="rounded-circle mr-1"
-          alt="William Harris"
-          width="40"
-          height="40"
-        />
-        <div class="flex-grow-1 ml-3">
-          William Harris
-          <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-        </div>
-      </div>
-    </a> -->
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 import { db } from "@/firebase/db";
+import moment from "moment";
 
 export default {
   data() {
     return {
       unsubRooms: () => {},
     };
+  },
+  filters: {
+    moment: function(date) {
+      return moment(date).format("h:mma");
+    },
   },
   computed: {
     ...mapState(["rooms", "currentRoom"]),
@@ -75,6 +74,13 @@ export default {
             this.$store.dispatch("deleteRoom", room);
             // this.changeRoom(room.id);
           }
+          if (change.type === "modified") {
+            let room = change.doc.data();
+            console.log("room", room);
+            // Dispatch to vuex store
+            this.$store.dispatch("updateRecentMessage", room);
+            // this.changeRoom(room.id);
+          }
           console.log("change.type", change.type);
         });
       });
@@ -85,3 +91,18 @@ export default {
   },
 };
 </script>
+
+<style>
+.room-list {
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.room-title {
+  flex-grow: 4;
+}
+.preview-message {
+  text-overflow: ellipsis;
+}
+</style>
