@@ -6,7 +6,7 @@
           <div
             class="bg-white shadow border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500"
           >
-            <div class="text-center text-md-center mb-4 mt-md-0">
+            <div class="text-center text-md-center mt-md-0">
               <h1 class="mb-0 h3">
                 Epik Chat - Sign IN
               </h1>
@@ -15,7 +15,7 @@
             <br />
             <!-- Start form -->
             <form @submit.prevent="login">
-              <div class="form-group mb-4">
+              <div class="form-group">
                 <label for="email" class="col-form-label">Email</label>
                 <div class="input-group">
                   <input
@@ -28,21 +28,21 @@
                     autocomplete="username"
                   />
                 </div>
-                <div class="form-group mb-4">
-                  <label for="password" class="col-sm-2 col-form-label">Password</label>
-                  <div class="input-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="password"
-                      v-model="password"
-                      required
-                      autocomplete="current-password"
-                    />
-                  </div>
-                </div>
-                <p v-if="errorText" class="text-danger">{{ errorText }}</p>
               </div>
+              <div class="form-group mb-4">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    v-model="password"
+                    required
+                    autocomplete="current-password"
+                  />
+                </div>
+              </div>
+              <p v-if="errorText" class="text-danger">{{ errorText }}</p>
               <div class="d-grid">
                 <button type="submit" name="login" class="btn bg-dark text-white">
                   Sign IN

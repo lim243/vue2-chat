@@ -1,5 +1,105 @@
 <template>
-  <div class="container">
+  <section class="vh-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
+    <div class="container">
+      <div class="row justify-content-center form-bg-image" id="image-background">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+          <div
+            class="bg-white shadow border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500"
+          >
+            <div class="text-center text-md-center mt-md-0">
+              <h1 class="mb-0 h3">
+                Epik Chat - Register Account
+              </h1>
+            </div>
+            <br />
+            <!-- Start form -->
+            <form @submit.prevent="signUpWithEmailAndPassword">
+              <div class="form-group">
+                <label for="name" class="col-form-label">Display Name</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    placeholder="Display name"
+                    v-model="name"
+                    required
+                    autocomplete="username"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email" class="col-form-label">Email</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="email"
+                    placeholder="Email"
+                    v-model="email"
+                    required
+                    autocomplete="username"
+                  />
+                </div>
+              </div>
+              <div class="form-group mb-4">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    v-model="password"
+                    placeholder="Password"
+                    required
+                    autocomplete="current-password"
+                  />
+                </div>
+              </div>
+              <p v-if="errorText" class="text-danger">{{ errorText }}</p>
+              <div class="d-grid">
+                <button type="submit" name="login" class="btn bg-dark text-white">
+                  Create Account
+                </button>
+              </div>
+            </form>
+            <!-- End form -->
+
+            <br />
+            <div class="d-flex justify-content-center align-items-center mt-4">
+              <span class="fw-normal">
+                Already have an account?
+                <a href="/" class="fw-bold">Sign IN</a>
+              </span>
+            </div>
+
+            <!-- 3rd party -->
+            <hr />
+            <p>
+              Sign up with Third-party Authentication
+            </p>
+            <div class="row gap-2">
+              <button
+                @click="googleSignIn"
+                name="google"
+                class="col btn bg-danger text-white"
+              >
+                Google
+              </button>
+              <button
+                @click="githubSignIn"
+                name="github"
+                class="col btn bg-dark text-white"
+              >
+                Github
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- <div class="container">
     <div class="card register">
       <div class="card-body">
         <h2 class="card-title text-center">Create a new account</h2>
@@ -57,7 +157,7 @@
     <button class="btn btn-dark third-party-btn" @click="githubSignIn">
       Sign Up With Github
     </button>
-  </div>
+  </div> -->
 </template>
 
 <script>
