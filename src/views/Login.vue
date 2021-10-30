@@ -1,50 +1,90 @@
 <template>
-  <div id="login-container" class="container">
-    <div class="card login">
-      <div class="card-body">
-        <h2 class="card-title text-center">Login</h2>
-        <form @submit.prevent="login" class="text-center">
-          <div class="form-group">
-            <div class="mb-3 row">
-              <label for="email" class="col-sm-2 col-form-label">Email</label>
-              <div class="col-sm-10">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="email"
-                  placeholder="Please enter your email ..."
-                  v-model="email"
-                  required
-                  autocomplete="username"
-                />
-              </div>
+  <section class="vh-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
+    <div class="container">
+      <div class="row justify-content-center form-bg-image" id="image-background">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+          <div
+            class="bg-white shadow border-0 rounded border-light p-4 p-lg-5 w-100 fmxw-500"
+          >
+            <div class="text-center text-md-center mb-4 mt-md-0">
+              <h1 class="mb-0 h3">
+                Epik Chat - Sign IN
+              </h1>
+              <br />
             </div>
-            <div class="mb-3 row">
-              <label for="password" class="col-sm-2 col-form-label">Password</label>
-              <div class="col-sm-10">
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  v-model="password"
-                  required
-                  autocomplete="current-password"
-                />
+            <br />
+            <!-- Start form -->
+            <form @submit.prevent="login">
+              <div class="form-group mb-4">
+                <label for="email" class="col-form-label">Email</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="email"
+                    placeholder="Please enter your email ..."
+                    v-model="email"
+                    required
+                    autocomplete="username"
+                  />
+                </div>
+                <div class="form-group mb-4">
+                  <label for="password" class="col-sm-2 col-form-label">Password</label>
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      v-model="password"
+                      required
+                      autocomplete="current-password"
+                    />
+                  </div>
+                </div>
+                <p v-if="errorText" class="text-danger">{{ errorText }}</p>
               </div>
+              <div class="d-grid">
+                <button type="submit" name="login" class="btn bg-dark text-white">
+                  Sign IN
+                </button>
+              </div>
+            </form>
+            <!-- End form -->
+
+            <br />
+            <div class="d-flex justify-content-center align-items-center mt-4">
+              <span class="fw-normal">
+                Not registered?
+                <a href="/register" class="fw-bold">Create account</a>
+              </span>
             </div>
-            <p v-if="errorText" class="text-danger">{{ errorText }}</p>
+
+            <!-- 3rd party -->
+            <hr />
+            <p>
+              Sign in with Third-party Authentication
+            </p>
+            <div class="row gap-2">
+              <button
+                @click="googleSignIn"
+                name="google"
+                class="col btn bg-danger text-white"
+              >
+                Google
+              </button>
+              <button
+                @click="githubSignIn"
+                name="github"
+                class="col btn bg-dark text-white"
+              >
+                Github
+              </button>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+        </div>
       </div>
     </div>
-    <button class="btn btn-danger third-party-btn" @click="googleSignIn">
-      Sign In With Google
-    </button>
-    <button class="btn btn-dark third-party-btn" @click="githubSignIn">
-      Sign In With Github
-    </button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -188,5 +228,16 @@ export default {
   margin-top: 0.5rem;
   display: block;
   width: 100%;
+}
+
+#image-background {
+  background-image: url("../assets/signin.svg");
+  background-repeat: no-repeat !important;
+  background-position: top center !important;
+  min-height: 500px;
+}
+
+.fmxw-500 {
+  max-width: 500px !important;
 }
 </style>
