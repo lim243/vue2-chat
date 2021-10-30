@@ -24,8 +24,10 @@ export default {
   color: #2c3e50;
   display: flex;
   flex-flow: column;
-  height: 100%;
+  /* height: 100%; */
+  height: 100vh;
   margin: 0;
+  background-color: #f5f8fb;
 }
 
 #nav {
