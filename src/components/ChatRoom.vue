@@ -27,7 +27,7 @@
           </button>
 
           <div v-show="editRoomFlag">
-            <button @click="deleteRoom">Delete Room</button>
+            <button class="btn btn-danger mt-2" @click="deleteRoom">Delete Room</button>
           </div>
 
           <Popup type="delete" v-show="this.showDeletePopup" />

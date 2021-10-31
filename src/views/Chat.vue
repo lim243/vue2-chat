@@ -7,7 +7,7 @@
       <!-- Main message area -->
       <div
         class="col-12 col-lg-7 col-xl-9 room-sidebar"
-        style="max-height: 90vh; overflow:hidden"
+        style="max-height: 95vh; overflow:hidden"
       >
         <div style="height: 100%" v-if="this.currentRoom">
           <ChatRoom />
