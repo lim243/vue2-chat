@@ -69,19 +69,14 @@ export default {
           }
           if (change.type === "removed") {
             let room = change.doc.data();
-            console.log("room", room);
             // Dispatch to vuex store
             this.$store.dispatch("deleteRoom", room);
-            // this.changeRoom(room.id);
           }
           if (change.type === "modified") {
             let room = change.doc.data();
-            console.log("room", room);
             // Dispatch to vuex store
             this.$store.dispatch("updateRecentMessage", room);
-            // this.changeRoom(room.id);
           }
-          console.log("change.type", change.type);
         });
       });
     },

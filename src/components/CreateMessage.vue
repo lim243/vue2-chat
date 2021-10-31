@@ -1,5 +1,5 @@
 <template>
-  <div class="create-message flex-grow-0 py-3 px-4 border-top">
+  <div class="create-message flex-grow-0 py-2 px-2 border-top rounded">
     <form class="inline" @submit.prevent="onSendMessage">
       <div class="input-group">
         <twemoji-picker
@@ -13,7 +13,7 @@
           @emojiUnicodeAdded="onSelectEmoji"
         />
         <input
-          v-model="message"
+          v-model="message_input"
           type="text"
           class="form-control"
           placeholder="Type your message"
@@ -36,7 +36,7 @@ import EmojiGroups from "@kevinfaguiar/vue-twemoji-picker/emoji-data/emoji-group
 export default {
   data() {
     return {
-      message: "",
+      message_input: "",
       showEmoji: false,
     };
   },
@@ -45,11 +45,10 @@ export default {
   },
   methods: {
     onSelectEmoji(emoji) {
-      console.log(emoji);
-      this.message += emoji;
+      this.message_input += emoji;
     },
     onSendMessage() {
-      if (this.message) {
+      if (this.message_input) {
         // Send message to store and update db
         const newMsg = {
           sentBy: {
@@ -59,7 +58,7 @@ export default {
           },
 
           sentAt: Date.now(),
-          messageText: this.message,
+          messageText: this.message_input,
           roomId: this.currentRoom.id,
         };
 
@@ -69,11 +68,8 @@ export default {
         updateDoc(doc(db, "rooms", this.currentRoom.id), {
           recentMessage: newMsg,
         });
-
-        // this.$store.dispatch("sendMessage", newMsg);
-        console.log("sendMessage", newMsg);
       }
-      this.message = "";
+      this.message_input = "";
     },
   },
   computed: {

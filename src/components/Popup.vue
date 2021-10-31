@@ -78,7 +78,6 @@ export default {
 
   methods: {
     toggleShowPopup() {
-      console.log("this.type", this.type);
       this.$store.dispatch("toggleShowPopup", this.type);
       this.roomName = null;
     },
@@ -91,7 +90,6 @@ export default {
     },
 
     async deleteRoom() {
-      console.log("delete this current room!");
       try {
         await deleteDoc(doc(db, "rooms", this.currentRoom.id));
         await deleteDoc(doc(db, "messages", this.currentRoom.id));

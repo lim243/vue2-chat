@@ -35,11 +35,15 @@
       </div>
     </div>
 
-    <div class="room-content" v-chat-scroll="{ always: false, smooth: true }">
+    <div
+      class="room-content"
+      v-chat-scroll="{ always: false, smooth: true }"
+      id="chat-background"
+    >
       <div
         v-for="message in this.messages"
         :key="message.id"
-        class="chat-messages p-4 overflow-auto"
+        class="chat-messages px-2 my-2 overflow-auto "
       >
         <div v-if="message.sentBy.id === user.uid" class="chat-message-right pb-4">
           <div>
@@ -51,16 +55,21 @@
               height="40"
             />
           </div>
-          <div class="flex-shrink-1 bg-primary rounded py-2 px-3 mr-3 text-white">
-            <div class="font-weight-bold mb-1">{{ message.sentBy.displayName }}</div>
+          <div class="mx-2">
+            <p class="text-secondary mb-1">
+              {{ message.sentBy.displayName }}
+            </p>
+            <div class="bg-primary text-white rounded py-2 px-3 mr-3 message-body">
+              {{ message.messageText }}
+            </div>
+
             <div class="text-black-50 small text-nowrap mt-2">
               {{ message.sentAt | moment }}
             </div>
-            {{ message.messageText }}
           </div>
         </div>
 
-        <div v-else class="chat-message-left pb-4">
+        <div v-else class="chat-message-left pb-4 flex-row">
           <div>
             <img
               :src="message.sentBy.photoURL"
@@ -70,12 +79,17 @@
               height="40"
             />
           </div>
-          <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-            <div class="font-weight-bold mb-1">{{ message.sentBy.displayName }}</div>
+          <div class="mx-2">
+            <p class="text-secondary mb-1">
+              {{ message.sentBy.displayName }}
+            </p>
+            <div class="bg-success text-white rounded py-2 px-3 mr-3 message-body">
+              {{ message.messageText }}
+            </div>
+
             <div class="text-black-50 small text-nowrap mt-2">
               {{ message.sentAt | moment }}
             </div>
-            {{ message.messageText }}
           </div>
         </div>
       </div>
@@ -110,14 +124,11 @@ export default {
     },
   },
   watch: {
-    currentRoom: function(newRoom, oldRoom) {
-      console.log("newRoom, oldRoom", newRoom, oldRoom);
+    currentRoom: function(newRoom) {
       this.$store.dispatch("resetMessages");
       this.unsub();
 
       this.mapMessages(newRoom.id);
-      // console.log("newQuestion", newQuestion);
-      // console.log("oldQuestion", oldQuestion);
     },
   },
   created() {
@@ -143,14 +154,13 @@ export default {
       this.editRoomFlag = !this.editRoomFlag;
     },
     async mapMessages(roomId) {
-      console.log("roomId", roomId);
       // Subscribe to rooms collection in db
       const q = query(
         collectionGroup(db, "msgs"),
         where("roomId", "==", roomId),
         orderBy("sentAt")
       );
-      console.log("q", q);
+
       this.unsub = onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
@@ -168,7 +178,6 @@ export default {
           }
         });
       });
-      console.log("messages", this.messages);
     },
   },
 };
@@ -233,5 +242,11 @@ export default {
 }
 .room-footer {
   flex: 0 1 40px;
+}
+
+#chat-background {
+  background-image: url("../assets/imageedit_2_9380702236.png");
+  /* background-repeat: no-repeat !important; */
+  background-position: top center !important;
 }
 </style>

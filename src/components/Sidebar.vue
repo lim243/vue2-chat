@@ -11,7 +11,7 @@
             v-on:selected="validateSelection"
             :disabled="false"
             :maxItem="10"
-            placeholder="Please select an option"
+            placeholder="Search for a room"
           >
           </Dropdown>
         </div>
@@ -86,42 +86,12 @@ export default {
         name: entry.displayName,
       }));
 
-      // Debug purposes only
-      // const arr = [
-      //   {
-      //     id: 0,
-      //     name: "Andrew T. Lim",
-      //     email: "andrewlamo1997@gmail.com",
-      //     objectID: "7zN4ojm8hRRVtMp4muVVkEYE45v1",
-      //     phoneNumber: null,
-      //     photoURL:
-      //       "https://lh3.googleusercontent.com/a-/AOh14Gi3p3A1VULzI1AwMhbuSki1asF3FkPOmm2vO31OuFk=s96-c",
-      //     providerId: "google.com",
-      //     uid: "104981178449533454466",
-      //   },
-      // ];
-
-      // console.log("options", options, arr);
-
       return arr;
     },
     onSearchChange(val) {
-      // Debug purposes only
       this.searchOptions = this.mapOptions(val);
-      // this.index
-      //   .search(val)
-      //   .then(({ hits }) => {
-      //     if (hits.length > 0) {
-      //       this.searchOptions = this.mapOptions(hits);
-      //       console.log("this.searchOptions", this.searchOptions);
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
     },
     validateSelection(val) {
-      console.log("val", val);
       this.$store.dispatch("setCurrentRoom", val.id);
     },
     showAddRoom() {

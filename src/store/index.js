@@ -57,8 +57,7 @@ export default new Vuex.Store({
     UPDATE_CHAT_USER_PROFILE(state) {
       state.messages;
     },
-    GO_NEXT_ROOM(state, prev) {
-      console.log("prev", prev);
+    GO_NEXT_ROOM(state) {
       if (state.rooms.length > 0) {
         state.currentRoom = state.rooms[0];
       } else {
@@ -98,13 +97,6 @@ export default new Vuex.Store({
     },
     resetMessages(state) {
       state.commit("RESET_MESSAGES");
-    },
-    fetchRooms(state) {
-      // Get all corresponding rooms
-
-      console.log("state.rooms", state.rooms);
-
-      // Listen to live updates from database
     },
     getNextRoom(state, prev) {
       state.commit("GO_NEXT_ROOM", prev);

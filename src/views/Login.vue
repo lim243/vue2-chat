@@ -138,7 +138,6 @@ export default {
 
           // The signed-in user info.
           const user = result.user;
-          console.log("user", user);
 
           // Add to DB
           const userData = user.providerData[0];
@@ -181,7 +180,6 @@ export default {
 
           // The signed-in user info.
           const user = result.user;
-          console.log("user", user);
 
           // Add to DB
           const userData = user.providerData[0];
