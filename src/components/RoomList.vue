@@ -43,7 +43,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["rooms", "currentRoom"]),
+    ...mapState(["rooms", "currentRoom", "user"]),
   },
   created() {
     this.mapRooms();
@@ -74,6 +74,14 @@ export default {
           }
           if (change.type === "modified") {
             let room = change.doc.data();
+
+            // Add notifications
+            if (room.recentMessage.sentBy.id !== this.user.uid) {
+              this.$notify({
+                title: `${room.name} (${room.recentMessage.sentBy.displayName})`,
+                text: room.recentMessage.messageText
+              });
+            }
             // Dispatch to vuex store
             this.$store.dispatch("updateRecentMessage", room);
           }
